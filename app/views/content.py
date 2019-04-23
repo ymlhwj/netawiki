@@ -9,10 +9,18 @@ class NetaContent(pyrestful.rest.RestHandler):
 
     @post('/neta/content/edit')
     def editNetaContent(self):
+        """
+        修改neta内容
+        :return:
+        """
         pass
 
     @post('/neta/content/add')
     def addNeta(self):
+        """
+        新增neta
+        :return:
+        """
         pass
 
     @post('/neta/content/delete')

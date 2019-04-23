@@ -11,4 +11,14 @@ class User(pyrestful.rest.RestHandler):
         """
         pass
 
+    @post('/user/login')
+    def login(self):
+        """
+        用户登录
+        :return:
+        """
+        pass
+
+
+
 
