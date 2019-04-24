@@ -1,3 +1,4 @@
+# coding=utf-8
 # @Project : NetaWiki
 # @Time    : 2019/4/24 0:27
 # @Author  : baiasuka

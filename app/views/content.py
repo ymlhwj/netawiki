@@ -1,8 +1,31 @@
+# coding=utf-8
 import pyrestful.rest
 
 from pyrestful.rest import get,post
 
+class NetaList(pyrestful.rest.RestHandler):
+    @get('/neta/list')
+    def getNetaList(self):
+        """
+        获取捏他列表
+        不加入搜索条件时默认展示最新更新的15条
+        :return:
+        """
+        pass
+
+    @get('/neta/top5')
+    def getTop(self):
+        """
+        展示浏览次数最多的5条
+        :return:
+        """
+        pass
+
+
 class NetaContent(pyrestful.rest.RestHandler):
+    """
+    捏他详情页内容
+    """
     @get('/neta/content/{id}')
     def getNetaContent(self, name):
         pass
@@ -28,6 +51,9 @@ class NetaContent(pyrestful.rest.RestHandler):
         pass
 
 class NetaComment(pyrestful.rest.RestHandler):
+    """
+    捏他评论
+    """
     @get('/neta/comment')
     def getCommentList(self):
         pass

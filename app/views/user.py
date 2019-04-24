@@ -1,3 +1,4 @@
+# coding=utf-8
 import pyrestful.rest
 
 from pyrestful.rest import get,post
@@ -17,6 +18,10 @@ class User(pyrestful.rest.RestHandler):
         用户登录
         :return:
         """
+        pass
+
+    @post('/user/changepassword')
+    def changePsw(self):
         pass
 
 
