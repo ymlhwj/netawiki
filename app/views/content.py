@@ -5,6 +5,7 @@ from pyrestful import mediatypes
 import pandas as pd
 
 from app.utils.DBconnection import excute_query, excute_update, excute_delete
+from app.utils.tools import JsonUtils
 
 class NetaList(pyrestful.rest.RestHandler):
     @get('/neta/list')
@@ -23,6 +24,11 @@ class NetaList(pyrestful.rest.RestHandler):
                         limit 0,15"""
         result = excute_query(sql)
 
+        columns = ["neta_name", "neta_content", "editor", "update_time"]
+        df = pd.DataFrame(data=result, columns=columns)
+        data = df[columns[:]].to_dict(orient='recodes')
+
+        return JsonUtils.returm_json_response(code=200, msg="success", data=data)
 
     @get('/neta/top5')
     def getTop(self):
@@ -49,8 +55,11 @@ class NetaContent(pyrestful.rest.RestHandler):
                         where id = :id"""
         result = excute_query(sql, {"id": id})
 
+        columns = ["neta_name", "neta_content", "author", "create_time", "editor", "update_time"]
+        df = pd.DataFrame(data=result, columns=columns)
+        data = df[columns[:]].to_dict(orient='recodes')
 
-        return
+        return JsonUtils.returm_json_response(code=200, msg="success", data=data)
 
     @post('/neta/content/edit')
     def editNetaContent(self):
