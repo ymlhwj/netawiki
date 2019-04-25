@@ -1,7 +1,10 @@
 # coding=utf-8
 import pyrestful.rest
+from pyrestful.rest import get, post
+from pyrestful import mediatypes
+import pandas as pd
 
-from pyrestful.rest import get,post
+from app.utils.DBconnection import excute_query, excute_update, excute_delete
 
 class NetaList(pyrestful.rest.RestHandler):
     @get('/neta/list')
@@ -11,7 +14,15 @@ class NetaList(pyrestful.rest.RestHandler):
         不加入搜索条件时默认展示最新更新的15条
         :return:
         """
-        pass
+        sql = """select neta_name,
+                        neta_content,
+                        editor,
+                        update_time 
+                        from t_neta
+                        order by update_time desc 
+                        limit 0,15"""
+        result = excute_query(sql)
+
 
     @get('/neta/top5')
     def getTop(self):
@@ -26,9 +37,20 @@ class NetaContent(pyrestful.rest.RestHandler):
     """
     捏他详情页内容
     """
-    @get('/neta/content/{id}')
-    def getNetaContent(self, name):
-        pass
+    @get('/neta/content/{id}', _produces=mediatypes.APPLICATION_JSON)
+    def getNetaContent(self, id):
+        sql = """select neta_name,
+                        neta_content,
+                        author,
+                        create_time,
+                        editor,
+                        update_time
+                        from t_neta
+                        where id = :id"""
+        result = excute_query(sql, {"id": id})
+
+
+        return
 
     @post('/neta/content/edit')
     def editNetaContent(self):

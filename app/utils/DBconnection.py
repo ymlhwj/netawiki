@@ -23,6 +23,7 @@ class DB_Connection:
         Session = sessionmaker(bind=self.engine)
         return Session
 
+
 Session = DB_Connection().get_session()
 
 @contextmanager
@@ -40,7 +41,8 @@ def open_session():
     finally:
         _session.close()
 
-def excute_query(sql, params):
+
+def excute_query(sql, params=None):
     with open_session() as session:
         try:
             result = session.excute(text(sql), params).fetchall()
@@ -48,6 +50,7 @@ def excute_query(sql, params):
             session.rollback()
         else:
             return result
+
 
 def excute_update(sql, params):
     with open_session() as session:
@@ -58,6 +61,7 @@ def excute_update(sql, params):
         else:
             return True
 
+
 def excute_delete(sql, params):
     with open_session() as session:
         try:
@@ -66,3 +70,5 @@ def excute_delete(sql, params):
             session.rollback()
         else:
             return True
+
+
