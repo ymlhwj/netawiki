@@ -45,17 +45,16 @@ def open_session():
 def excute_query(sql, params=None):
     with open_session() as session:
         try:
-            result = session.excute(text(sql), params).fetchall()
+            result = session.execute(text(sql), params).fetchall()
         except Exception as e:
             session.rollback()
         else:
             return result
 
-
 def excute_update(sql, params):
     with open_session() as session:
         try:
-            session.excute(text(sql), params)
+            session.execute(text(sql), params)
             print("excuted")
         except Exception as e:
             session.rollback()
@@ -66,7 +65,7 @@ def excute_update(sql, params):
 def excute_delete(sql, params):
     with open_session() as session:
         try:
-            session.excute(text(sql), params)
+            session.execute(text(sql), params)
         except Exception as e:
             session.rollback()
         else:

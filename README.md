@@ -1,3 +1,3 @@
 # netawiki
 
-# docker exec -it py /bin/sh
+# docker exec -it tor bash

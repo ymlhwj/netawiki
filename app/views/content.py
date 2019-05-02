@@ -74,8 +74,8 @@ class NetaContent(pyrestful.rest.RestHandler):
         params["neta_content"] = request["neta_content"]
         params["author"] = request["author"]
         params["create_time"] = str(datetime.now())
-        query_sql = """select neta_name from netawiki.t_neta where neta_name=:neta_name"""
-        result = excute_query(query_sql, {"neta_name": params["neta_name"]})
+        query_sql = """select neta_name from netawiki.t_neta where neta_name=:neta_name;"""
+        result = excute_query(query_sql, params={"neta_name": params["neta_name"]})
         if result is not None:
             return Response.return_response(code=200, msg="neta has already existed")
 
