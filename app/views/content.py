@@ -3,10 +3,11 @@ import pyrestful.rest
 from pyrestful.rest import get, post
 from pyrestful import mediatypes
 import pandas as pd
+import json
 from datetime import datetime
 
 from app.utils.DBconnection import excute_query, excute_update, excute_delete
-from app.utils.tools import Response
+from app.utils.tools import Response, format_data, ComplexEncoder
 
 class NetaList(pyrestful.rest.RestHandler):
     @get('/neta/list', _produces=mediatypes.APPLICATION_JSON)
@@ -26,10 +27,9 @@ class NetaList(pyrestful.rest.RestHandler):
         result = excute_query(sql)
 
         columns = ["neta_name", "neta_content", "editor", "update_time"]
-        df = pd.DataFrame(data=result, columns=columns)
-        data = df[columns[:]].to_dict(orient='recodes')
-
-        return Response.return_response(code=200, msg="success", data=data)
+        data = format_data(columns, result)
+        response = Response.return_response(code=200, msg="success", data=data)
+        return json.dumps(response, cls=ComplexEncoder)
 
     @get('/neta/top5')
     def getTop(self):
@@ -53,14 +53,12 @@ class NetaContent(pyrestful.rest.RestHandler):
                         editor,
                         update_time
                         from t_neta
-                        where id = :id"""
+                        where neta_id = :id"""
         result = excute_query(sql, {"id": id})
-
         columns = ["neta_name", "neta_content", "author", "create_time", "editor", "update_time"]
-        df = pd.DataFrame(data=result, columns=columns)
-        data = df[columns[:]].to_dict(orient='recodes')
-
-        return Response.return_response(code=200, msg="success", data=data)
+        data = format_data(columns, result)
+        response = Response.return_response(code=200, msg="success", data=data)
+        return json.dumps(response, cls=ComplexEncoder)
 
     @post('/neta/content/add', _produces=mediatypes.APPLICATION_JSON)
     def addNeta(self, request):
@@ -76,7 +74,7 @@ class NetaContent(pyrestful.rest.RestHandler):
         params["create_time"] = str(datetime.now())
         query_sql = """select neta_name from netawiki.t_neta where neta_name=:neta_name;"""
         result = excute_query(query_sql, params={"neta_name": params["neta_name"]})
-        if result is not None:
+        if len(result):
             return Response.return_response(code=200, msg="neta has already existed")
 
         update_sql = """insert into netawiki.t_neta (neta_name, neta_content, author, create_time, editor, update_time, version)
