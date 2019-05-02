@@ -1,9 +1,12 @@
 import tornado.ioloop
-from app import create_app
+from app import create_server
+import tornado.options
 
-app = create_app()
+server = create_server()
 
 
 if __name__ == "__main__":
-    app.listen()
+    server.listen(8081)
+    tornado.options.parse_command_line()
+    print("netawiki server start")
     tornado.ioloop.IOLoop.current().start()

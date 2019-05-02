@@ -1,6 +1,4 @@
-import json
-
-class JsonUtils:
+class Response:
     """
     前后端交互统一返回格式
         :param code: 返回码
@@ -9,7 +7,9 @@ class JsonUtils:
         :return:
     """
     @staticmethod
-    def returm_json_response(code, msg, data):
-        return json.dumps({"code": code, "msg": msg, "data": data})
+    def return_response(code, msg, data=None):
+        if data is None:
+            return {"code": code, "msg": msg}
+        return {"code":code, "msg": msg, "data": data}
 
 

@@ -1,10 +1,10 @@
 # coding=utf-8
 class Config:
-    DB_HOST = '127.0.0.1'
-    DB_USER = ''
-    DB_PASSWORD = ''
-    DB_NAME = ''
-    DB_PORT = 2345
+    DB_HOST = '47.98.173.194'
+    DB_USER = 'root'
+    DB_PASSWORD = 'GTRawfQKiGmVIoFXSlcgdnlvZOXSO8'
+    DB_NAME = 'netawiki'
+    DB_PORT = 13306
 
     REDIS_HOST = 'localhost'
     REDIS_PORT = 6379
@@ -21,8 +21,6 @@ class Config:
     # 用于Celery的Redis配置项
     REDIS_CELERY_BROKER_DB = 5
     REDIS_CELERY_BACKEND_DB = 3
-
-
 
 
 config = Config()

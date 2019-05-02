@@ -3,12 +3,13 @@ import pyrestful.rest
 from pyrestful.rest import get, post
 from pyrestful import mediatypes
 import pandas as pd
+from datetime import datetime
 
 from app.utils.DBconnection import excute_query, excute_update, excute_delete
-from app.utils.tools import JsonUtils
+from app.utils.tools import Response
 
 class NetaList(pyrestful.rest.RestHandler):
-    @get('/neta/list')
+    @get('/neta/list', _produces=mediatypes.APPLICATION_JSON)
     def getNetaList(self):
         """
         获取捏他列表
@@ -28,7 +29,7 @@ class NetaList(pyrestful.rest.RestHandler):
         df = pd.DataFrame(data=result, columns=columns)
         data = df[columns[:]].to_dict(orient='recodes')
 
-        return JsonUtils.returm_json_response(code=200, msg="success", data=data)
+        return Response.return_response(code=200, msg="success", data=data)
 
     @get('/neta/top5')
     def getTop(self):
@@ -59,20 +60,35 @@ class NetaContent(pyrestful.rest.RestHandler):
         df = pd.DataFrame(data=result, columns=columns)
         data = df[columns[:]].to_dict(orient='recodes')
 
-        return JsonUtils.returm_json_response(code=200, msg="success", data=data)
+        return Response.return_response(code=200, msg="success", data=data)
+
+    @post('/neta/content/add', _produces=mediatypes.APPLICATION_JSON)
+    def addNeta(self, request):
+        """
+        新增neta
+        :return:
+        """
+        print(request)
+        params = {}
+        params["neta_name"] = request["neta_name"]
+        params["neta_content"] = request["neta_content"]
+        params["author"] = request["author"]
+        params["create_time"] = str(datetime.now())
+        query_sql = """select neta_name from netawiki.t_neta where neta_name=:neta_name"""
+        result = excute_query(query_sql, {"neta_name": params["neta_name"]})
+        if result is not None:
+            return Response.return_response(code=200, msg="neta has already existed")
+
+        update_sql = """insert into netawiki.t_neta (neta_name, neta_content, author, create_time, editor, update_time, version)
+                  values (:neta_name, :neta_content, :author, :create_time, :author, :create_time, 0); """
+        excute_update(update_sql, params=params)
+
+        return Response.return_response(code=200, msg="success")
 
     @post('/neta/content/edit')
     def editNetaContent(self):
         """
         修改neta内容
-        :return:
-        """
-        pass
-
-    @post('/neta/content/add')
-    def addNeta(self):
-        """
-        新增neta
         :return:
         """
         pass
@@ -96,3 +112,16 @@ class NetaComment(pyrestful.rest.RestHandler):
     @post('/neta/comment/delete')
     def deleteComment(self):
         pass
+
+
+class Test(pyrestful.rest.RestHandler):
+    @post('/neta/test',  _produces=mediatypes.APPLICATION_JSON)
+    def test(self, test_info):
+        print(test_info)
+        print(type(test_info))
+        neta_name = test_info.get("neta_name", "")
+        print(neta_name)
+        sql = """select * from netawiki.t_neta where neta_name= :neta_name ;"""
+        result = excute_query(sql, {"neta_name": neta_name})
+        print(result)
+        return Response.return_response(code="200", msg="succeed", data=[{"info": "hello!"}])

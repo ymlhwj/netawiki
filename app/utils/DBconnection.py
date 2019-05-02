@@ -16,7 +16,7 @@ class DB_Connection:
 
     def get_engine(self):
         print(self.dbs)
-        return create_engine('mysql+mysqldb://{username}:{password}@{host}:{port}/{dbs}'.format(
+        return create_engine('mysql+pymysql://{username}:{password}@{host}:{port}/{dbs}'.format(
             username=self.username, password=self.password, host=self.host, port=self.port, dbs=self.dbs))
 
     def get_session(self):
@@ -56,6 +56,7 @@ def excute_update(sql, params):
     with open_session() as session:
         try:
             session.excute(text(sql), params)
+            print("excuted")
         except Exception as e:
             session.rollback()
         else:
