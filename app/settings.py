@@ -1,8 +1,8 @@
 # coding=utf-8
 class Config:
-    DB_HOST = '47.98.173.194'
+    DB_HOST = '127.0.0.1'
     DB_USER = 'root'
-    DB_PASSWORD = 'GTRawfQKiGmVIoFXSlcgdnlvZOXSO8'
+    DB_PASSWORD = ''
     DB_NAME = 'netawiki'
     DB_PORT = 13306
 

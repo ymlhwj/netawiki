@@ -71,7 +71,7 @@ class NetaContent(pyrestful.rest.RestHandler):
         params = {}
         params["neta_name"] = request["neta_name"]
         params["neta_content"] = request["neta_content"]
-        params["author"] = self.get_secure_cookie('username')
+        params["author"] = self.get_secure_cookie("username")
         params["create_time"] = str(datetime.now())
 
         query_sql = """select neta_name from netawiki.t_neta where neta_name=:neta_name;"""
