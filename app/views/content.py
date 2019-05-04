@@ -71,7 +71,7 @@ class NetaContent(pyrestful.rest.RestHandler):
         params = {}
         params["neta_name"] = request["neta_name"]
         params["neta_content"] = request["neta_content"]
-        params["author"] = request["author"]
+        params["author"] = self.get_secure_cookie('username')
         params["create_time"] = str(datetime.now())
 
         query_sql = """select neta_name from netawiki.t_neta where neta_name=:neta_name;"""
@@ -126,9 +126,21 @@ class NetaComment(pyrestful.rest.RestHandler):
 
         return json.dumps(response, cls=ComplexEncoder)
 
-    @post('/neta/comment/add')
-    def addComment(self):
-        pass
+    @post('/neta/comment/add', _produces=mediatypes.APPLICATION_JSON)
+    def addComment(self, request):
+        params = []
+        params['neta_name']  = request['neta_name']
+        params['author'] = self.get_secure_cookie('username')
+        params['content'] = request['content']
+        params['create_time'] = str(datetime.now())
+
+        sql = """declare @max_floor int;
+                 set @max_floor = (select MAX(floor_num) from neta_wiki.t_comment where neta_name = :neta_name );
+                 insert into netawiki.t_comment (neta_name, content, author, create_time, floor_num)
+                 values (:neta_name, :content, :author, :create_time, @max_floor + 1);"""
+        excute_update(sql, params)
+
+        return Response.return_response(code="200", msg="add comment success")
 
     @post('/neta/comment/delete')
     def deleteComment(self):
