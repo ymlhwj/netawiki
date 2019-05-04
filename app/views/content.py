@@ -28,10 +28,11 @@ class NetaList(pyrestful.rest.RestHandler):
 
         columns = ["neta_name", "neta_content", "editor", "update_time"]
         data = format_data(columns, result)
+
         response = Response.return_response(code=200, msg="success", data=data)
         return json.dumps(response, cls=ComplexEncoder)
 
-    @get('/neta/top5')
+    @get('/neta/top5', _produces=mediatypes.APPLICATION_JSON)
     def getTop(self):
         """
         展示浏览次数最多的5条
@@ -72,6 +73,7 @@ class NetaContent(pyrestful.rest.RestHandler):
         params["neta_content"] = request["neta_content"]
         params["author"] = request["author"]
         params["create_time"] = str(datetime.now())
+
         query_sql = """select neta_name from netawiki.t_neta where neta_name=:neta_name;"""
         result = excute_query(query_sql, params={"neta_name": params["neta_name"]})
         if len(result):
@@ -81,7 +83,7 @@ class NetaContent(pyrestful.rest.RestHandler):
                   values (:neta_name, :neta_content, :author, :create_time, :author, :create_time, 0); """
         excute_update(update_sql, params=params)
 
-        return Response.return_response(code=200, msg="success")
+        return Response.return_response(code=200, msg="update success")
 
     @post('/neta/content/edit')
     def editNetaContent(self):
@@ -98,10 +100,31 @@ class NetaContent(pyrestful.rest.RestHandler):
 class NetaComment(pyrestful.rest.RestHandler):
     """
     捏他评论
+    每页展示十条
     """
-    @get('/neta/comment')
-    def getCommentList(self):
-        pass
+    @post('/neta/comment', _produces=mediatypes.APPLICATION_JSON)
+    def getCommentList(self, request):
+        params = {}
+        params['neta_name'] = request['neta_name']
+        params['no_start'] = request['page'] * 10
+        params['no_end'] = params['start'] + 10
+
+        sql = """select content,
+                        author,
+                        create_time,
+                        floor_num
+                        from neta_wiki.t_comment
+                        where neta_name = :neta_name
+                        order by floor_num
+                        limit :no_start, :no_end"""
+
+        result = excute_query(sql, params)
+
+        columns = ["content", "author", "create_time", "floor_num"]
+        data = format_data(columns, result)
+        response = Response.return_response(code=200, msg="success", data=data)
+
+        return json.dumps(response, cls=ComplexEncoder)
 
     @post('/neta/comment/add')
     def addComment(self):
