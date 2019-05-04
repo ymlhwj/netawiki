@@ -1,5 +1,6 @@
 from datetime import date, datetime
 import json
+from hashlib import md5
 
 
 class Response:
@@ -30,4 +31,17 @@ class ComplexEncoder(json.JSONEncoder):
       return obj.strftime('%Y-%m-%d')
     else:
       return json.JSONEncoder.default(self, obj)
+
+# md5加密
+def encrypt_md5(data, times=1):
+    """
+    :param data: 要加密的数据
+    :param times: 解密的次数
+    :return:
+    """
+    m5 = md5()
+    for i in range(times):
+        m5.update(data.encode("utf-8"))
+        data = m5.hexdigest()
+    return data
 
