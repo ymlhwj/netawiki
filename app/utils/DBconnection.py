@@ -1,7 +1,7 @@
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import text
-from ..settings import config
+from app.settings import config
 from contextlib import contextmanager
 
 class DB_Connection:
@@ -72,3 +72,8 @@ def excute_delete(sql, params):
             return True
 
 
+if __name__ == '__main__':
+    sql = """select username from netawiki.t_user where username = :username"""
+    result = excute_query(sql, {'username':'hwj'})
+    print(result)
+    print(len(result))
