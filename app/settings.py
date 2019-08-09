@@ -6,6 +6,12 @@ class Config:
     DB_NAME = 'netawiki'
     DB_PORT = 13306
 
+    DIALECT = 'mysql'
+    DRIVER = 'pymysql'
+
+    SQLALCHEMY_DATABASE_URI = "{}+{}://{}:{}@{}:{}/{}?charset=utf8mb4".format(DIALECT, DRIVER, DB_USER, DB_PASSWORD, DB_HOST,
+                                                                              DB_PORT, DB_NAME)
+
     REDIS_HOST = 'localhost'
     REDIS_PORT = 6379
     REDIS_CACHE_DB = 1
